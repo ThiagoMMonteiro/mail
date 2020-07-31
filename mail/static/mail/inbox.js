@@ -59,6 +59,17 @@ function load_mailbox(mailbox) {
       console.log(emails);
 
       // ... do something else with emails ...
-      // document.querySelector('#emails-view').innerHTML = emails;
+      
+      for (i in emails) {
+        const element = document.createElement('div');
+        element.style.border = 'solid';
+        element.style.marginTop = '5px';
+        element.innerHTML = emails[i]["sender"] + ' - ' + emails[i]["subject"] + ' - ' + emails[0]["timestamp"];
+        element.addEventListener('click', function() {
+          console.log('This element has been clicked!')
+        });
+        document.querySelector('#emails-view').append(element);
+      }
+      
   });
 }
