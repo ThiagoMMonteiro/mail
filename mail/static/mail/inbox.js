@@ -21,26 +21,8 @@ function compose_email() {
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
 
-  document.querySelector('#compose-form').onsubmit = function() {
-    const recipients = document.querySelector('#compose-recipients').value;
-    const subject = document.querySelector('#compose-subject').value;
-    const body = document.querySelector('#compose-body').value;
+  document.querySelector('#compose-form').onsubmit = send_email;
 
-    fetch('/emails', {
-      method: 'POST',
-      body: JSON.stringify({
-          recipients: recipients,
-          subject: subject,
-          body: body
-      })
-    })
-    .then(response => response.json())
-    .then(result => {
-        // Print result
-        console.log(result);
-    });
-    return false;
-  };
 }
 
 function load_mailbox(mailbox) {
@@ -59,17 +41,70 @@ function load_mailbox(mailbox) {
       console.log(emails);
 
       // ... do something else with emails ...
-      
-      for (i in emails) {
+
+      // Show the emails list in mailbox selected
+      for (let i in emails) {
         const element = document.createElement('div');
         element.style.border = 'solid';
         element.style.marginTop = '5px';
-        element.innerHTML = emails[i]["sender"] + ' - ' + emails[i]["subject"] + ' - ' + emails[0]["timestamp"];
+        if (mailbox === 'sent') {
+          element.innerHTML = emails[i]["recipients"] + ' - ' + emails[i]["subject"] + ' - ' + emails[i]["timestamp"];
+        }else {
+          element.innerHTML = emails[i]["sender"] + ' - ' + emails[i]["subject"] + ' - ' + emails[i]["timestamp"];
+        }
         element.addEventListener('click', function() {
           console.log('This element has been clicked!')
+
+          fetch(`/emails/${emails[i]["id"]}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+            read: true
+            })
+          })
+          .then(email => {
+            // Print email
+            console.log(email);
+            // ... do something else with email ...
+            element.style.backgroundColor = 'gray';
+          });
+
         });
         document.querySelector('#emails-view').append(element);
       }
+
+      // fetch('/emails/28')
+      // .then(response => response.json())
+      // .then(email => {
+      //   // Print email
+      //   console.log(email);
+      //
+      //   // ... do something else with email ...
+      // });
       
   });
+}
+
+function send_email(){
+  const recipients = document.querySelector('#compose-recipients').value;
+  const subject = document.querySelector('#compose-subject').value;
+  const body = document.querySelector('#compose-body').value;
+
+  fetch('/emails', {
+    method: 'POST',
+    body: JSON.stringify({
+        recipients: recipients,
+        subject: subject,
+        body: body
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+      // Print result
+      console.log(result);
+
+      // Load the user's sent mailbox
+      load_mailbox('sent');
+
+  });
+  return false;
 }
