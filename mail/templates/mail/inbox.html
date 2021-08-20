@@ -18,7 +18,7 @@
     <div id="unique-email-view">
         <h3></h3>
         <div class="form-group">
-            From: <input disabled class="form-control" value="{{ request.user.email }}">
+            From: <h6 id="view-sender"></h6>
         </div>
         <div class="form-group">
             To: <h6 id="view-recipients"></h6>
@@ -34,7 +34,7 @@
         </div>
         <hr>
         <button id="button-unread" type="button" class="btn btn-primary">Mark as unread</button>
-        <button id="button-archive" type="button" class="btn btn-primary">Archive</button>
+        <button id="button-reply" type="button" class="btn btn-primary">Reply</button>
     </div>
 
     <div id="compose-view">
@@ -50,7 +50,7 @@
                 <input class="form-control" id="compose-subject" placeholder="Subject">
             </div>
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" class="btn btn-primary"/>
+            <input id="button-send" type="submit" class="btn btn-primary" value="Send"/>
         </form>
     </div>
 {% endblock %}
