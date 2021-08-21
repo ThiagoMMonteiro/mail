@@ -114,16 +114,21 @@ function load_mailbox(mailbox) {
         button_archive.id = "button-archive";
         button_archive.type = "button";
         button_archive.className = "btn btn-primary";
-        if (mailbox === 'inbox') {
-            button_archive.innerHTML = "Archive";
-        }else {
-            button_archive.innerHTML = "Unarchive";
-        }
+        // if (mailbox === 'inbox') {
+        //
+        // }else {
+        //
+        // }
 
         if (mailbox === 'sent') {
-            element.innerHTML = email["recipients"] + ' - ' + email["subject"] + ' - ' + email["timestamp"];
-        }else {
-            element.innerHTML = email["sender"] + ' - ' + email["subject"] + ' - ' + email["timestamp"];
+            element.innerHTML = `${email["recipients"]} - ${email["subject"]} - ${email["timestamp"]}`;
+        } else if (mailbox === 'inbox') {
+            button_archive.innerHTML = "Archive";
+            element.innerHTML = `${email["sender"]} - ${email["subject"]} - ${email["timestamp"]}`;
+            document.querySelector('#emails-view').append(button_archive);
+        } else {
+            button_archive.innerHTML = "Unarchive";
+            element.innerHTML = `${email["sender"]} - ${email["subject"]} - ${email["timestamp"]}`;
             document.querySelector('#emails-view').append(button_archive);
         }
         if (email["read"] !== true){
@@ -137,7 +142,7 @@ function load_mailbox(mailbox) {
         });
         button_archive.addEventListener('click', () => archive_email(email["id"], mailbox));
       })
-      
+
   });
 }
 
